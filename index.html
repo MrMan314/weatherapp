@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loading...</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="js/all.js"></script>
+    <script>
+      fetch('https://api.openweathermap.org/data/2.5/weather?q='+(new URLSearchParams(window.location.search).get('q'))+'&appid=4045382da3a05576d049418ab37d486e').then(resp => resp.json()).then(data => {
+          function fun() {
+              console.log(data.cod)
+              if (data.cod === 200) {
+                  document.getElementById("temperature").innerHTML = Math.round((data.main.temp - 273.15) * 100) / 100 + "℃";
+                  document.getElementById("cityName").innerHTML = "<form method='get'><span class='fp fp-square fp-rounded " + data.sys.country.toLowerCase() + "'></span> <input type='text' name='q' id='cityName' value='" + data.name + ", " + data.sys.country + "' placeholder='City Name'/>";
+                  document.getElementById("weatherMain").innerHTML = data.weather[0].main;
+                  document.getElementById("windSpeed").innerHTML = data.wind.speed + " km/h";
+                  document.getElementById("humidity").innerHTML = data.main.humidity + "%";
+                  document.getElementById("daytime").innerHTML = Math.round((data.sys.sunset - data.sys.sunrise) / 36) / 100 + "h";
+                  document.getElementById("dt").innerHTML = (new Date(data.dt * 1000)).toLocaleTimeString();
+                  document.getElementsByTagName("title")[0].innerHTML = data.name + ", " + data.sys.country;
+                  if (data.sys.sunset < data.dt || data.dt > data.sys.sunrise) document.body.style.backgroundImage = "url('https://cdn.wallpapersafari.com/44/92/oDed5S.jpg')";
+                  else document.body.style.backgroundImage = "url('https://www.pixelstalk.net/wp-content/uploads/2016/07/Download-Free-Weather-Background.jpg')";
+              } else {
+                  document.getElementById("card").innerHTML = "<div class='d-flex flex-column text-center mt-5 mb-4'><h6 class='display-4 mb-0' style='color: #1C2331;'>Search</h6></div><div class='d-flex flex-column text-center mt-5 mb-4'><form method='get'><input type='text' name='q' placeholder='City Name' class='form-control'/><br><input type='submit' class='btn btn-primary'/></form></div><div class='d-flex flex-column text-center mt-5 mb-4'></div></div>";
+                  document.body.style.backgroundImage = "url('https://www.lifewire.com/thmb/6DrtO40qnoND20afLabJ8MHUN4w=/1614x1105/filters:fill(auto,1)/Maplocation_-5a492a4e482c52003601ea25.jpg')";
+              }
+          }
+          fun();
+          setInterval(fun, 300000);
+      });
+    </script>
+    <link rel="stylesheet" href="flagpack/dist/flagpack.css">
+    <link rel="stylesheet" href="css/all.css">
+</head>
+<body style="background-size: cover;">
+<section class="vh-100">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-5">
+        <div class="card" style="color: #4B515D; border-radius: 35px;">
+          <div class="card-body p-4" id="card">
+            <div class="d-flex">
+              <h6 class="flex-grow-1" id="cityName"></h6>
+              <h6 id="dt"></h6>
+            </div>
+            <div class="d-flex flex-column text-center mt-5 mb-4">
+              <h6 class="display-4 mb-0 font-weight-bold" style="color: #1C2331;" id="temperature"></h6>
+              <span class="small" style="color: #868B94" id="weatherMain"></span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="flex-grow-1" style="font-size: 1rem;">
+                <div><i class="fas fa-wind fa-fw" style="color: #868B94;"></i> <span class="ms-1" id="windSpeed"></span></div>
+                <div><i class="fas fa-tint fa-fw" style="color: #868B94;"></i> <span class="ms-1" id="humidity"></span></div>
+                <div><i class="fas fa-sun fa-fw" style="color: #868B94;"></i> <span class="ms-1" id="daytime"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
